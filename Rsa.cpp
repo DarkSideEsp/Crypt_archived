@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
-#include <cstdlib>
 #include <numeric>
 
 using namespace std;
@@ -13,7 +12,8 @@ unsigned long long binpow(unsigned long long a, unsigned long long n, unsigned l
 
 
 vector<unsigned long long> gen_keys(unsigned long long p, unsigned long long q){
-    unsigned long long n, fi, d, k, e, a, b, c;
+    unsigned long long n, fi, d, k, e;
+    e = 1;
     vector<unsigned long long> keys(3, 0);
 
     n = p * q;
@@ -54,7 +54,7 @@ unsigned long long decrypt(unsigned long long c, unsigned long long d, unsigned 
 vector<unsigned long long> rsa_crypt_string(string line, unsigned long long e, unsigned long long n){
     vector<unsigned long long> crypted_line;
 
-    for(int i = 0; i < line.size(); i++){
+    for(unsigned int i = 0; i < line.size(); i++){
         crypted_line.push_back(crypt(int(line[i]), e, n));
     }
 
@@ -65,7 +65,7 @@ vector<unsigned long long> rsa_crypt_string(string line, unsigned long long e, u
 string rsa_decrypt_line(vector<unsigned long long> crypted_line, unsigned long long d, unsigned long long n){
     string line = "";
 
-    for(int i = 0; i < crypted_line.size(); i++){
+    for(unsigned int i = 0; i < crypted_line.size(); i++){
         line += char(decrypt(crypted_line[i], d, n));
     }
 

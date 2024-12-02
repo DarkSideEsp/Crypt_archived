@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
-#include <cstdlib>
 
 using namespace std;
 
@@ -75,11 +74,11 @@ string vigener_crypt(string line, string password){
     string crypted_line = "";
 
     string full_password = "";
-    for(int i = 0; i < line.size(); i++){
+    for(unsigned int i = 0; i < line.size(); i++){
         full_password += password[i % password.size()];
     }
 
-    for(int i = 0; i < line.size(); i++){
+    for(unsigned int i = 0; i < line.size(); i++){
         crypted_line += char((int(line[i]) + int(full_password[i]) - (2 * int('a'))) % 26 + int('a')); // 26 - кол-во букв в английском алфавите
     }
 
@@ -90,11 +89,11 @@ string vigener_decrypt(string crypted_line, string password){
     string line = "";
 
     string full_password = "";
-    for(int i = 0; i < crypted_line.size(); i++){
+    for(unsigned int i = 0; i < crypted_line.size(); i++){
         full_password += password[i % password.size()];
     }
 
-    for(int i = 0; i < crypted_line.size(); i++){
+    for(unsigned int i = 0; i < crypted_line.size(); i++){
         line += char(mod((int(crypted_line[i]) - int(full_password[i])), 26) + int('a')); // 26 - кол-во букв в английском алфавите
     }
 
