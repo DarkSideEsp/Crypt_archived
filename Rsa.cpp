@@ -1,14 +1,9 @@
-#include <iostream>
 #include <vector>
-#include <ctime>
+#include <string>
 #include <numeric>
+#include "algs.hpp"
 
 using namespace std;
-
-
-unsigned long long mod(unsigned long long a, unsigned long long b);
-unsigned long long binpow(unsigned long long a, unsigned long long n);
-unsigned long long binpow(unsigned long long a, unsigned long long n, unsigned long long module);
 
 
 vector<unsigned long long> gen_keys(unsigned long long p, unsigned long long q){
