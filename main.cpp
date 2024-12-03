@@ -2,8 +2,8 @@
 #include <vector>
 #include <ctime>
 
-#include "algs.hpp"
-#include "Rsa.hpp"
+#include "headers/algs.hpp"
+#include "headers/Rsa.hpp"
 
 using namespace std;
 

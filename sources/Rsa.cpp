@@ -1,7 +1,8 @@
 #include <vector>
 #include <string>
 #include <numeric>
-#include "algs.hpp"
+
+#include "../headers/algs.hpp"
 
 using namespace std;
 
