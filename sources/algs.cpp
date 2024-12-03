@@ -77,7 +77,7 @@ string vigener_crypt(string line, string password){
     }
 
     for(unsigned int i = 0; i < line.size(); i++){
-        crypted_line += char((int(line[i]) + int(full_password[i]) - (2 * int('a'))) % 26 + int('a')); // 26 - ���-�� ���� � ���������� ��������
+        crypted_line += char((int(line[i]) + int(full_password[i]) - (2 * int('a'))) % 26 + int('a')); 
     }
 
     return crypted_line;
@@ -92,7 +92,7 @@ string vigener_decrypt(string crypted_line, string password){
     }
 
     for(unsigned int i = 0; i < crypted_line.size(); i++){
-        line += char(mod((int(crypted_line[i]) - int(full_password[i])), 26) + int('a')); // 26 - ���-�� ���� � ���������� ��������
+        line += char(mod((int(crypted_line[i]) - int(full_password[i])), 26) + int('a')); 
     }
 
     return line;
