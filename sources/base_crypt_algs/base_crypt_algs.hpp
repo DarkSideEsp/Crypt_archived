@@ -16,3 +16,7 @@ unsigned long long vigener_recovery_mod(long long a, long long b);
 string vigener_crypt(string line, string password);
 
 string vigener_decrypt(string crypted_line, string password);
+
+vector<unsigned int> text_to_nums(string line);
+
+string nums_to_text(vector<unsigned int> line);

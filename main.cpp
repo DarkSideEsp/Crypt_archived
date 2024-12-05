@@ -16,7 +16,7 @@ int main(){
     srand(time(NULL));
     cin >> line >> password;
 
-    cout << "Caesar" << "\t" << line << "\t" << caesar_crypt(line, 2) << "\t" << caesar_decrypt(caesar_crypt(line, 2), 2) << "\n";
+    cout << "Caesar" << "\t" << line << "\t" << caesar_crypt(line, int(password[0])) << "\t" << caesar_decrypt(caesar_crypt(line, int(password[0])), int(password[0])) << "\n";
     cout << "Vigener" << "\t" << line << "\t" << vigener_crypt(line, password) << "\t" << vigener_decrypt(vigener_crypt(line, password), password) << "\n";
 
 
