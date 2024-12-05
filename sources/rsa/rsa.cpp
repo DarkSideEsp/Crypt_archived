@@ -2,7 +2,8 @@
 #include <string>
 #include <numeric>
 
-#include "../algs/algs.hpp"
+#include "rsa.hpp"
+#include "../math_algs/math_algs.hpp"
 
 
 using namespace std;

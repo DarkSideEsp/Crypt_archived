@@ -4,8 +4,11 @@
 
 #include "sources/algs/algs.hpp"
 #include "sources/rsa/rsa.hpp"
+#include "sources/math_algs/math_algs.hpp"
+
 
 using namespace std;
+
 
 int main(){
     string line, password;
