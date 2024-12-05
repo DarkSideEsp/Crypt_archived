@@ -1,7 +1,7 @@
 #include <vector>
 #include <string>
 
-#include "algs.hpp"
+#include "base_crypt_algs.hpp"
 
 
 using namespace std;
