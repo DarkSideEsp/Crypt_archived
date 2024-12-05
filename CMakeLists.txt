@@ -5,17 +5,17 @@ project(Crypt)
 
 
 add_executable(main main.cpp 
-                    sources/Rsa.cpp
-                    sources/algs.cpp 
-                    headers/Rsa.hpp 
-                    headers/algs.hpp)
+                    sources/rsa/rsa.cpp
+                    sources/algs/algs.cpp 
+                    sources/rsa/rsa.hpp 
+                    sources/algs/algs.hpp)
 
 
 set(SOURCE 
             main.cpp 
-            sources/Rsa.cpp 
-            sources/algs.cpp)
+            sources/rsa/rsa.cpp
+            sources/algs/algs.cpp)
 
 set(HEADER 
-            headers/Rsa.hpp 
-            headers/algs.hpp)
+            sources/rsa/rsa.hpp 
+            sources/algs/algs.hpp)

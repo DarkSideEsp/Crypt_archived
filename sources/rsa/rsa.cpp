@@ -2,7 +2,7 @@
 #include <string>
 #include <numeric>
 
-#include "../headers/algs.hpp"
+#include "../algs/algs.hpp"
 
 
 using namespace std;
