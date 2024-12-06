@@ -18,7 +18,7 @@ vector<unsigned long long> gen_keys(unsigned long long p, unsigned long long q){
 
     fi = (p - 1) * (q - 1);
 
-    for(unsigned long long i = 2; i < fi; i++){
+    for(unsigned long long i = 991; i < fi; i++){
         if(gcd(i, fi) == 1){
             e = i;
             break;
@@ -37,7 +37,7 @@ vector<unsigned long long> gen_keys(unsigned long long p, unsigned long long q){
 }
 
 
-unsigned long long crypt(unsigned long long m, unsigned long long e, unsigned long long n){
+unsigned long long encrypt(unsigned long long m, unsigned long long e, unsigned long long n){
     unsigned long long c = binpow(m, e, n) % n;
     return c;
 }
@@ -49,22 +49,22 @@ unsigned long long decrypt(unsigned long long c, unsigned long long d, unsigned 
 }
 
 
-vector<unsigned long long> rsa_crypt_string(string line, unsigned long long e, unsigned long long n){
+vector<unsigned long long> rsa_encrypt(vector<unsigned int> line, unsigned long long e, unsigned long long n){
     vector<unsigned long long> crypted_line;
 
     for(unsigned int i = 0; i < line.size(); i++){
-        crypted_line.push_back(crypt(int(line[i]), e, n));
+        crypted_line.push_back(encrypt(int(line[i]), e, n));
     }
 
     return crypted_line;
 }
 
 
-string rsa_decrypt_line(vector<unsigned long long> crypted_line, unsigned long long d, unsigned long long n){
-    string line = "";
+vector<unsigned int> rsa_decrypt(vector<unsigned long long> crypted_line, unsigned long long d, unsigned long long n){
+    vector<unsigned int> line;
 
     for(unsigned int i = 0; i < crypted_line.size(); i++){
-        line += char(decrypt(crypted_line[i], d, n));
+        line.push_back(decrypt(crypted_line[i], d, n));
     }
 
     return line;

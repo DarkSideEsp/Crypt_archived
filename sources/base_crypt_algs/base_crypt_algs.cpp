@@ -62,7 +62,7 @@ string vigener_decrypt(string crypted_line, string password){
     return line;
 }
 
-vector<unsigned int> text_to_nums(string line){
+vector<unsigned int> string_to_nums(string line){
     vector<unsigned int> out_line;
     for(char i : line){
         out_line.push_back(int(i));
@@ -70,7 +70,7 @@ vector<unsigned int> text_to_nums(string line){
     return out_line;
 }
 
-string nums_to_text(vector<unsigned int> line){
+string nums_to_string(vector<unsigned int> line){
     string out_line;
     for(int i : line){
         out_line.push_back(char(i));

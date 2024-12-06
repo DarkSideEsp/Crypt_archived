@@ -20,6 +20,7 @@ int main(){
     cout << "Vigener" << "\t" << line << "\t" << vigener_crypt(line, password) << "\t" << vigener_decrypt(vigener_crypt(line, password), password) << "\n";
 
 
+    vector<unsigned int> numbered_line = string_to_nums(line);
     vector<unsigned long long> primes = primes_gen(1000, 5000);
     a = rand() % primes.size();
     b = rand() % primes.size();
@@ -32,11 +33,11 @@ int main(){
     e = keys[0];
     d = keys[1];
     n = keys[2];
-    vector<unsigned long long> crypted_line = rsa_crypt_string(line, e, n);
+    vector<unsigned long long> crypted_line = rsa_encrypt(numbered_line, e, n);
 
     cout << "Rsa" << "\t" << line << "\t";
-    for(auto i : crypted_line) cout << i << " ";
-    cout << "\t" << rsa_decrypt_line(crypted_line, d, n) << "\n";
+    for(auto i : crypted_line) cout << "..." << i % 10 << " ";
+    cout << "\t" << nums_to_string(rsa_decrypt(crypted_line, d, n)) << "\n";
 
     return 0;
 }

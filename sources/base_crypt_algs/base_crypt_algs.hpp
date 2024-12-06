@@ -17,6 +17,6 @@ string vigener_crypt(string line, string password);
 
 string vigener_decrypt(string crypted_line, string password);
 
-vector<unsigned int> text_to_nums(string line);
+vector<unsigned int> string_to_nums(string line);
 
-string nums_to_text(vector<unsigned int> line);
+string nums_to_string(vector<unsigned int> line);
