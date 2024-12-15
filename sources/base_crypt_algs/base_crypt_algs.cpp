@@ -7,7 +7,7 @@
 using namespace std;
 
 
-string caesar_crypt(string line, int n){
+string caesar_encrypt(string line, int n){
     string crypted_line = "";
 
     for(auto i : line){
@@ -32,7 +32,7 @@ unsigned long long vigener_recovery_mod(long long a, long long b){
     return (b + (a % b)) % b;
 }
 
-string vigener_crypt(string line, string password){
+string vigener_encrypt(string line, string password){
     string crypted_line = "";
 
     string full_password = "";
