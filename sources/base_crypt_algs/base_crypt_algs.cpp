@@ -62,18 +62,20 @@ string vigener_decrypt(string crypted_line, string password){
     return line;
 }
 
+const string alphabet = "0123456789!@#$%^&*()№;:?-_+={}[]<>,.~ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя";
+
 vector<unsigned int> string_to_nums(string line){
     vector<unsigned int> out_line;
     for(char i : line){
-        out_line.push_back(int(i));
+        out_line.push_back(alphabet.find(i));
     }
     return out_line;
 }
 
 string nums_to_string(vector<unsigned int> line){
     string out_line;
-    for(int i : line){
-        out_line.push_back(char(i));
+    for(auto i : line){
+        out_line += alphabet[i];
     }
     return out_line;
 }
