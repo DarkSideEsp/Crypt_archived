@@ -2,7 +2,11 @@
 
 #include <vector>
 #include <string>
+<<<<<<< HEAD
 #include <ctime>
+=======
+#include <algorithm>
+>>>>>>> master
 
 
 using namespace std;
