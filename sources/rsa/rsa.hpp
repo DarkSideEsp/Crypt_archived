@@ -8,7 +8,7 @@
 using namespace std;
 
 
-vector<unsigned long long> gen_keys(unsigned long long p, unsigned long long q);
+vector<unsigned long long> gen_keys();
 
 unsigned long long encrypt(unsigned long long m, unsigned long long e, unsigned long long n);
 

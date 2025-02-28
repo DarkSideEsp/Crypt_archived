@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <numeric>
+#include <ctime>
 
 #include "rsa.hpp"
 #include "../math_algs/math_algs.hpp"
@@ -9,7 +10,17 @@
 using namespace std;
 
 
-vector<unsigned long long> gen_keys(unsigned long long p, unsigned long long q){
+vector<unsigned long long> gen_keys(){
+    srand(time(NULL));
+
+    vector<unsigned long long> primes = primes_gen(1e4, 1e5);
+    int a = rand() % primes.size();
+    int b = rand() % primes.size();
+    while(a == b) b = rand() % primes.size();
+
+    unsigned long long p = primes[a];
+    unsigned long long q = primes[b];
+
     unsigned long long n, fi, d, k, e;
     e = 1;
     vector<unsigned long long> keys(3, 0);

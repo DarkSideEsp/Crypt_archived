@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <ctime>
 
 #include "sources/base_crypt_algs/base_crypt_algs.hpp"
 #include "sources/rsa/rsa.hpp"
@@ -13,7 +12,6 @@ using namespace std;
 int main(){
     string line, password;
     unsigned long long e, d, n, a, b;
-    srand(time(NULL));
 
     cout << "Write the line: ";
     cin >> line;
@@ -25,15 +23,8 @@ int main(){
 
 
     vector<unsigned int> numbered_line = string_to_nums(line);
-    vector<unsigned long long> primes = primes_gen(1000, 5000);
-    a = rand() % primes.size();
-    b = rand() % primes.size();
-    while(a == b){
-        a = rand() % primes.size();
-        b = rand() % primes.size();
-    }
 
-    vector<unsigned long long> keys = gen_keys(primes[a], primes[b]);
+    vector<unsigned long long> keys = gen_keys();
     e = keys[0];
     d = keys[1];
     n = keys[2];
