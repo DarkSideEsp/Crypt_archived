@@ -15,12 +15,7 @@ int main(){
 
     cout << "Write the line: ";
     cin >> line;
-    cout << "Write the password: ";
-    cin >> password;
-
-    cout << "Caesar" << "\t" << line << "\t" << caesar_encrypt(line, int(password[0])) << "\t" << caesar_decrypt(caesar_encrypt(line, int(password[0])), int(password[0])) << "\n";
-    cout << "Vigener" << "\t" << line << "\t" << vigener_encrypt(line, password) << "\t" << vigener_decrypt(vigener_encrypt(line, password), password) << "\n";
-
+    
 
     vector<unsigned int> numbered_line = string_to_nums(line);
 
