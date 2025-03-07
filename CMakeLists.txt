@@ -1,42 +1,29 @@
 cmake_minimum_required(VERSION 3.10)
 
 
-project(Crypt)
+if(EXISTS "/home/darks/Документы/projectsC++/Crypt/server_main.cpp")
+    project(Development)
 
 
-add_executable(server server_main.cpp 
-                    sources/server/server.cpp
-                    sources/rsa/rsa.cpp
-                    sources/base_crypt_algs/base_crypt_algs.cpp
-                    sources/math_algs/math_algs.cpp
+    add_executable(server server_main.cpp 
+                        sources/rsa/rsa.cpp
+                        sources/base_crypt_algs/base_crypt_algs.cpp
+                        sources/math_algs/math_algs.cpp
 
-                    sources/server/server.hpp
-                    sources/rsa/rsa.hpp 
-                    sources/base_crypt_algs/base_crypt_algs.hpp
-                    sources/math_algs/math_algs.hpp)
-
-
-
-add_executable(listener client_listener_main.cpp 
-                    sources/listener/listener.cpp
-                    sources/rsa/rsa.cpp
-                    sources/base_crypt_algs/base_crypt_algs.cpp
-                    sources/math_algs/math_algs.cpp
-                    
-                    sources/listener/listener.hpp
-                    sources/rsa/rsa.hpp 
-                    sources/base_crypt_algs/base_crypt_algs.hpp
-                    sources/math_algs/math_algs.hpp)
+                        sources/rsa/rsa.hpp 
+                        sources/base_crypt_algs/base_crypt_algs.hpp
+                        sources/math_algs/math_algs.hpp)
+else()
+    project(Crypt)
 
 
+    add_executable(main main.cpp 
+                        sources/rsa/rsa.cpp
+                        sources/base_crypt_algs/base_crypt_algs.cpp
+                        sources/math_algs/math_algs.cpp
 
-add_executable(writer client_writer_main.cpp 
-                    sources/writer/writer.cpp
-                    sources/rsa/rsa.cpp
-                    sources/base_crypt_algs/base_crypt_algs.cpp
-                    sources/math_algs/math_algs.cpp
+                        sources/rsa/rsa.hpp 
+                        sources/base_crypt_algs/base_crypt_algs.hpp
+                        sources/math_algs/math_algs.hpp)
+endif()
 
-                    sources/writer/writer.hpp
-                    sources/rsa/rsa.hpp 
-                    sources/base_crypt_algs/base_crypt_algs.hpp
-                    sources/math_algs/math_algs.hpp)
