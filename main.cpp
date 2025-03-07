@@ -14,7 +14,7 @@ int main(){
     unsigned long long e, d, n, a, b;
 
     cout << "Write the line: ";
-    cin >> line;
+    getline(cin, line);
     
 
     vector<unsigned int> numbered_line = string_to_nums(line);
