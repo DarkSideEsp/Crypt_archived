@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <numeric>
+#include <ctime>
 
 #include "rsa.hpp"
 #include "../math_algs/math_algs.hpp"
