@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <thread>
 
 using namespace std;
 
@@ -21,7 +22,7 @@ int main(){
 
     cout << "Yep\n";
     sockaddr_in addr;
-    int client_socket = accept(server_socket, (sockaddr*)&addr, nullptr);
+    int client_socket = accept(server_socket, (sockaddr*) &addr, nullptr);
     cout << "DoubleYep\t" << inet_ntoa(addr.sin_addr) << "\n";
     
     char buffer[1024];
