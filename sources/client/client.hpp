@@ -1,7 +1,6 @@
 #pragma once
 
 
-#include <arpa/inet.h>
 #include <string>
 
 using namespace std;
@@ -9,7 +8,7 @@ using namespace std;
 
 extern bool listen_run;
 extern const int timer;
-extern const string server_ip;
+extern const char* server_ip;
 extern const int port;
 
 

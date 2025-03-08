@@ -4,30 +4,42 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <thread>
+#include <string>
+
+#include "sources/server/server.hpp"
+
 
 using namespace std;
 
+
+bool listener_run;
+const int port = 1234;
+
+
 int main(){
-    int server_socket = socket(AF_INET, SOCK_STREAM, 0);
-    sockaddr_in server_addr;
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(1234);
+    pair<int, sockaddr_in> temp = init_server();
+    cout << "Server Initialized\n";
+    int server_socket = temp.first;
+    sockaddr_in server_addr = temp.second;
 
-    server_addr.sin_addr.s_addr = INADDR_ANY;
+    start_server(server_socket, server_addr);
+    cout << "Server started\n";
 
-
-    bind(server_socket, (sockaddr*) &server_addr, sizeof(server_addr));
-    listen(server_socket, 10);
-    cout << "Server ready\n";
-
-    cout << "Yep\n";
-    sockaddr_in addr;
-    int client_socket = accept(server_socket, (sockaddr*) &addr, nullptr);
-    cout << "DoubleYep\t" << inet_ntoa(addr.sin_addr) << "\n";
     
-    char buffer[1024];
-    recv(client_socket, buffer, sizeof(buffer), 0);
-    send(client_socket, buffer, sizeof(buffer), 0);
+    listener_run = true;
+    thread listener_th(listener, server_socket, server_addr);
+    listener_th.detach();
 
-    close(client_socket);
+
+    string line = "";
+    while(line != "exit"){
+        cout << "> ";
+        getline(cin, line);
+
+        if(line == "stop server"){
+            listener_run = false;
+            close(server_socket);
+            cout << "Server stopped\n";
+        }
+    }
 }

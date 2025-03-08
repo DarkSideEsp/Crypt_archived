@@ -1,4 +1,3 @@
-#include <thread>
 #include <unistd.h>
 #include <string>
 #include <sys/socket.h>
@@ -7,8 +6,8 @@
 #include <iostream>
 #include <cstring>
 
-
 #include "client.hpp"
+
 
 using namespace std;
 
@@ -38,7 +37,7 @@ sockaddr_in get_server_addr(){
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
 
-    if(inet_pton(AF_INET, (const char*) &server_ip, &server_addr.sin_addr) <= 0){
+    if(inet_pton(AF_INET, server_ip, &server_addr.sin_addr) <= 0){
         cout << "Что-то пошло не так на этапе инициализации IP-адреса сервера. \n";
         exit;
     }

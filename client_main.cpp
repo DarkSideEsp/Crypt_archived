@@ -8,12 +8,13 @@
 
 #include "sources/client/client.hpp"
 
+
 using namespace std;
 
 
 bool listen_run = true;
 const int timer = 1;
-const string server_ip = "192.168.194.113";
+const char* server_ip = "127.0.0.1";
 const int port = 1234;
 
 
