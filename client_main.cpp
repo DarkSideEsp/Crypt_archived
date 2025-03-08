@@ -19,7 +19,24 @@ const int port = 1234;
 
 int main(){
     int client_socket = init_client();
-
-
     sockaddr_in server_addr = get_server_addr();
+
+
+    /*
+    Hello message
+    */
+
+
+    thread listener_th(listener, client_socket, server_addr);
+    listener_th.detach();
+    cout << "Listener started\n";
+
+
+    /*
+    Something
+    */
+
+
+    listen_run = false;
+    sleep(2 * timer);
 }

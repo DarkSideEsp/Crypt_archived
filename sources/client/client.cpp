@@ -14,7 +14,16 @@ using namespace std;
 
 
 void listener(int client_socket, sockaddr_in server_addr){
-    return;
+    while(listen_run){
+        /*
+        Gen Listen messge
+        Send it
+        Get the ans
+        Write if it exist
+        */
+
+        sleep(timer);
+    }
 }
 
 
@@ -53,21 +62,3 @@ pair<int, string> send_message(string message, int client_socket, sockaddr_in se
 
     return {200, (string) buffer};
 }
-
-/*
-int main(){
-    int client_socket = socket(AF_INET, SOCK_STREAM, 0);
-
-    sockaddr_in server_addr;
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(1234);
-    if(inet_pton(AF_INET, "192.168.194.113", &server_addr.sin_addr) <= 0) cout << "Somethink fucked\n";
-
-    if(connect(client_socket, (struct sockaddr*) &server_addr, sizeof(server_addr)) == -1) cout << "Another fuck\n";
-
-    string message = "hi";
-    send(client_socket, message.c_str(), message.size(), 0);
-
-    close(client_socket);
-}
-*/
