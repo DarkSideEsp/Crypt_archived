@@ -11,12 +11,13 @@ int main(){
 
     sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(8080);
-
+    server_addr.sin_port = htons(1234);
     if(inet_pton(AF_INET, "192.168.194.113", &server_addr.sin_addr) <= 0) cout << "Somethink fucked\n";
 
     if(connect(client_socket, (struct sockaddr*) &server_addr, sizeof(server_addr)) == -1) cout << "Another fuck\n";
 
-    
+    string message = "hi";
+    send(client_socket, message.c_str(), message.size(), 0);
+
     close(client_socket);
 }
