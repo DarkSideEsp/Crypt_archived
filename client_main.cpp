@@ -27,13 +27,6 @@ int main(){
     Hello message
     */
 
-    pair<int, string> ans = send_message("Hello", client_socket, server_addr);
-    if(ans.first == -400){
-        cout << "Что-произошло при подключении к серверу\n";
-    }else if(ans.first == 200){
-        cout << "Ok\t" << ans.second << "\n";
-    }
-
     thread listener_th(listener, client_socket, server_addr);
     listener_th.detach();
 

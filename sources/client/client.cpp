@@ -49,8 +49,8 @@ sockaddr_in get_server_addr(){
 
 
 pair<int, string> send_message(string message, int client_socket, sockaddr_in server_addr){
-    if(connect(client_socket, (struct sockaddr*) &server_addr, sizeof(server_addr)) == -1){
-        return {-400, ""};
+    if(connect(client_socket, (struct sockaddr*) &server_addr, sizeof(server_addr)) != 0){
+        return {-400, strerror(errno)};
     }
 
     send(client_socket, message.c_str(), message.size(), 0);
