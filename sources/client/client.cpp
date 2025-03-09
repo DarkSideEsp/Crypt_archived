@@ -53,15 +53,12 @@ pair<int, string> send_message(string message, int client_socket, sockaddr_in se
         return {-400, ""};
     }
 
-    cout << message << "\t" << message.c_str() << "\t" << message.size() << "\n";
-    int bytes = send(client_socket, message.c_str(), message.size(), 0);
-    cout << bytes << "\n";
+    send(client_socket, message.c_str(), message.size(), 0);
     
     char buffer[1024];
     memset(buffer, 0, sizeof(buffer));
 
     recv(client_socket, buffer, sizeof(buffer), 0);
-    cout << buffer << "\n";
 
     return {200, (string) buffer};
 }

@@ -33,21 +33,21 @@ pair<int, sockaddr_in> init_server(){
 
 
 void start_server(int server_socket, sockaddr_in server_addr){
-    bind(server_socket, (sockaddr*) &server_addr, sizeof(server_addr));
+    bind(server_socket, (struct sockaddr*) &server_addr, sizeof(server_addr));
     listen(server_socket, 10);
 
     cout << "Server started\n";
 }
 
 
-void catch_client(int client_socket, sockaddr_in client_addr){
-    cout << inet_ntoa(client_addr.sin_addr) << "\n";
-
+void catch_client(int client_socket){
     char buffer[1024];
     memset(buffer, 0, sizeof(buffer));
 
     int bytes = recv(client_socket, buffer, sizeof(buffer), 0);
-    cout << bytes << "\n";
+    if(bytes == -1){
+        cout << errno << "\n";
+    }
     send(client_socket, buffer, bytes, 0);
 
     cout << buffer << "\n";
@@ -60,10 +60,12 @@ void listener(int server_socket, sockaddr_in server_addr){
     cout << "Ready to clients\n";
     while(listener_run){
         sockaddr_in client_addr;
+        socklen_t len;
+        int client_socket = accept(server_socket, (struct sockaddr*) &client_addr, &len);
 
-        int client_socket = accept(server_socket, (struct sockaddr*) &client_addr, nullptr);
+        cout << "New client: " << inet_ntoa((client_addr.sin_addr)) << "\n";
 
-        thread(catch_client, client_socket, client_addr).detach();
+        thread(catch_client, client_socket).detach();
     }
     cout << "Listener stopped\n";
 }
