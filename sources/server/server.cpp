@@ -46,7 +46,7 @@ void catch_client(int client_socket){
 
     int bytes = recv(client_socket, buffer, sizeof(buffer), 0);
     if(bytes == -1){
-        cout << errno << "\n";
+        cout << "Some Error in getting data: " << errno << "\n";
     }
     send(client_socket, buffer, bytes, 0);
 

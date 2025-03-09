@@ -13,7 +13,7 @@ using namespace std;
 
 
 bool listener_run;
-const int port = 8080;
+const int port = 1234;
 
 
 int main(){

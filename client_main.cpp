@@ -15,7 +15,7 @@ using namespace std;
 bool listen_run = true;
 const int timer = 1;
 const char* server_ip = "127.0.0.1";
-const int port = 8080;
+const int port = 1234;
 
 
 int main(){
