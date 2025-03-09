@@ -17,3 +17,5 @@ void listener(int client_socket, sockaddr_in server_addr);
 int init_client();
 
 sockaddr_in get_server_addr();
+
+pair<int, string> send_message(string message, int client_socket, sockaddr_in server_addr);

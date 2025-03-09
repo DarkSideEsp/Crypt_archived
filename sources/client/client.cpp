@@ -13,9 +13,10 @@ using namespace std;
 
 
 void listener(int client_socket, sockaddr_in server_addr){
+    cout << "Listener started\n";
     while(listen_run){
         /*
-        Gen Listen messge
+        Gen Listen message
         Send it
         Get the ans
         Write if it exist
@@ -23,6 +24,7 @@ void listener(int client_socket, sockaddr_in server_addr){
 
         sleep(timer);
     }
+    cout << "Listener stopped\n";
 }
 
 
@@ -47,17 +49,19 @@ sockaddr_in get_server_addr(){
 
 
 pair<int, string> send_message(string message, int client_socket, sockaddr_in server_addr){
-    if(connect(client_socket, (sockaddr*) &server_addr, sizeof(server_addr)) == 1){
+    if(connect(client_socket, (struct sockaddr*) &server_addr, sizeof(server_addr)) == -1){
         return {-400, ""};
     }
 
-    send(client_socket, message.c_str(), message.size(), 0);
+    cout << message << "\t" << message.c_str() << "\t" << message.size() << "\n";
+    int bytes = send(client_socket, message.c_str(), message.size(), 0);
+    cout << bytes << "\n";
     
-    char buffer[2048];
+    char buffer[1024];
     memset(buffer, 0, sizeof(buffer));
-    recv(client_socket, buffer, sizeof(buffer), 0);
 
-    close(client_socket);
+    recv(client_socket, buffer, sizeof(buffer), 0);
+    cout << buffer << "\n";
 
     return {200, (string) buffer};
 }

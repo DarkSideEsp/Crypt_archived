@@ -23,6 +23,8 @@ pair<int, sockaddr_in> init_server(){
     server_addr.sin_port = htons(port);
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
+    cout << "Server Initialized\n";
+
     arguments.first = server_socket;
     arguments.second = server_addr;
 
@@ -33,24 +35,37 @@ pair<int, sockaddr_in> init_server(){
 void start_server(int server_socket, sockaddr_in server_addr){
     bind(server_socket, (sockaddr*) &server_addr, sizeof(server_addr));
     listen(server_socket, 10);
+
+    cout << "Server started\n";
 }
 
 
-void catch_client_data(int client_socket, sockaddr_in client_addr){
+void catch_client(int client_socket, sockaddr_in client_addr){
     cout << inet_ntoa(client_addr.sin_addr) << "\n";
+
+    char buffer[1024];
+    memset(buffer, 0, sizeof(buffer));
+
+    int bytes = recv(client_socket, buffer, sizeof(buffer), 0);
+    cout << bytes << "\n";
+    send(client_socket, buffer, bytes, 0);
+
+    cout << buffer << "\n";
 
     close(client_socket);
 }
 
 
 void listener(int server_socket, sockaddr_in server_addr){
+    cout << "Ready to clients\n";
     while(listener_run){
         sockaddr_in client_addr;
 
-        int client_socket = accept(server_socket, (sockaddr*) &client_addr, nullptr);
+        int client_socket = accept(server_socket, (struct sockaddr*) &client_addr, nullptr);
 
-        thread(catch_client_data, client_socket, client_addr).detach();
+        thread(catch_client, client_socket, client_addr).detach();
     }
+    cout << "Listener stopped\n";
 }
 
 // int main(){
