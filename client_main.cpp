@@ -22,10 +22,13 @@ int main(){
     int client_socket = init_client();
     sockaddr_in server_addr = get_server_addr();
 
+    pair<pair<string, size_t>, vector<string>> temp = client_cli_start(client_socket, server_addr);
+
 
     /*
     Hello message
     */
+
 
     thread listener_th(listener, client_socket, server_addr);
     listener_th.detach();
