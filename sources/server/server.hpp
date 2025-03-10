@@ -20,6 +20,7 @@ public:
     void start_server();
     void listener(bool& listener_run);
     void close_server_socket();
+    vector<string> get_username_list();
 
 protected:
     void catch_client(int client_socket);
@@ -34,4 +35,7 @@ private:
 
     int server_socket;
     sockaddr_in server_addr;
+
+    int client_visited_count = 0;
+    int client_count = 0;
 };

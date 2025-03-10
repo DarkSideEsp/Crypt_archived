@@ -7,6 +7,7 @@
 #include <cstring>
 #include <thread>
 #include <mutex>
+#include <vector>
 
 #include "server.hpp"
 #include "../json_lib/json.hpp"
@@ -27,42 +28,73 @@ Server::Server(int port){
     users.resize(0);
     username_list.resize(0);
 
-    cout << "Server Initialized\n";
+    mtx.lock();
+    cout << "\nServer Initialized\n";
+    mtx.unlock();
 }
 
 void Server::start_server(){
-    bind(server_socket, (struct sockaddr*) &server_addr, sizeof(server_addr));
-    listen(server_socket, 10);
+    if(bind(server_socket, (struct sockaddr*) &server_addr, sizeof(server_addr)) != 0){
+        mtx.lock();
+        cout << "\nSomething went wrong in server binding\t" << strerror(errno) << "\n";
+        mtx.unlock();
+        return;
+    }
+    if(listen(server_socket, 10) != 0){
+        mtx.lock();
+        cout << "\nSomething went wrong in server listen starting\t" << strerror(errno) << "\n";
+        mtx.unlock();
+        return;
+    }
 
-    cout << "Server started\n";
+    mtx.lock();
+    cout << "\nServer started\n";
+    mtx.unlock();
 }
 
 void Server::listener(bool& listener_run){
-    cout << "Ready to clients\n";
+    mtx.lock();
+    cout << "\nReady to clients\n";
+    mtx.unlock();
+
     while(listener_run){
         sockaddr_in client_addr;
         socklen_t len;
         int client_socket = accept(server_socket, (struct sockaddr*) &client_addr, &len);
 
-        cout << "New client: " << inet_ntoa((client_addr.sin_addr)) << "\n";
+        // cout << "New client: " << inet_ntoa((client_addr.sin_addr)) << "\n";
 
         thread(&Server::catch_client, this, client_socket).detach();
     }
-    cout << "Listener stopped\n";
+
+    mtx.lock();
+    cout << "\nListener stopped\n";
+    mtx.unlock();
 }
 
 void Server::close_server_socket(){
     close(server_socket);
 }
 
+vector<string> Server::get_username_list(){
+    return username_list;
+}
+
 
 void Server::catch_client(int client_socket){
+    mtx.lock();
+    client_count++;
+    client_visited_count++;
+    mtx.unlock();
+
     char buffer[1024];
     memset(buffer, 0, sizeof(buffer));
 
     int bytes = recv(client_socket, buffer, sizeof(buffer), 0);
     if(bytes == -1){
-        cout << "Some Error in getting data: " << errno << "\n";
+        mtx.lock();
+        cout << "\nSome Error in getting data: " << errno << "\n";
+        mtx.unlock();
     }
 
     
@@ -77,6 +109,10 @@ void Server::catch_client(int client_socket){
     send(client_socket, to_string(response).c_str(), to_string(response).size(), 0);
 
     close(client_socket);
+
+    mtx.lock();
+    client_count--;
+    mtx.unlock();
 }
 
 json Server::hello_processing(json request){

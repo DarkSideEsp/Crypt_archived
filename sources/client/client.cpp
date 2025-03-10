@@ -171,7 +171,7 @@ pair<pair<string, size_t>, vector<string>> Client::registration(){
             cout << "Caught unexpected response\nTry again\n";
             continue;
         }else if(registration_req["data"]["status"] == false){
-            cout << "This username already used? try other.\n";
+            cout << "This username already used, try other.\n";
             continue;
         }else{
             cout << "Successful registration\nNow lets make autorization\n";
