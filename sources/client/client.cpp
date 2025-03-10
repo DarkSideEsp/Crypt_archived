@@ -310,7 +310,7 @@ void Client::get_messages(){
 
     mtx.lock();
     for(auto& [from_username, input_message] : messages){
-        cout << "New message from: " << from_username << ". With text:\n" << input_message << "\n";
+        cout << "New message from: \"" << from_username << "\". With text: \"" << input_message << "\"\n";
     }
     mtx.unlock();
 }

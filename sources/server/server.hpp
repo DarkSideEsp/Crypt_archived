@@ -28,6 +28,7 @@ protected:
     json hello_processing(json request);
     json registration_processing(json request);
     json send_processing(json request);
+    json message_req_processing(json request);
 
 private:
     vector<pair<string, size_t>> users;

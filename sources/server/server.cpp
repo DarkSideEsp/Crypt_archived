@@ -8,6 +8,7 @@
 #include <thread>
 #include <mutex>
 #include <vector>
+#include <map>
 
 #include "server.hpp"
 #include "../json_lib/json.hpp"
@@ -106,6 +107,8 @@ void Server::catch_client(int client_socket){
         response = registration_processing(request);
     }else if(request["type"] == "send"){
         response = send_processing(request);
+    }else if(request["type"] == "messages_req"){
+        response = message_req_processing(request);
     }
 
     send(client_socket, to_string(response).c_str(), to_string(response).size(), 0);
@@ -195,4 +198,27 @@ json Server::send_processing(json request){
     }
 }
 
+json Server::message_req_processing(json request){
+    string username = request["data"]["username"];
 
+    bool autorize_flag = false;
+    int count_new = 0;
+    map<string, string> messages = {};
+
+    mtx.lock();
+    for(auto& user : users){
+        if(user.first == request["data"]["username"] && user.second == request["data"]["password"]){
+            autorize_flag = true;
+            break;
+        }
+    }
+    mtx.unlock();
+
+    if(!autorize_flag) return generate_message_req_ans(autorize_flag, count_new, messages);
+
+    count_new = user_messages[username].size();
+    messages = user_messages[username];
+    user_messages[username].clear();
+
+    return generate_message_req_ans(autorize_flag, count_new, messages);
+}
