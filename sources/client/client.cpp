@@ -15,7 +15,11 @@ using namespace std;
 using json = nlohmann::json;
 
 
-void listener(int client_socket, sockaddr_in server_addr){
+Client::Client(const char* server_ip, int port, int timer): server_ip(server_ip), port(port), timer(timer){
+    init_server_addr();
+}
+
+void Client::listener(bool& listen_run){
     cout << "Listener started\n";
     while(listen_run){
         /*
@@ -30,15 +34,39 @@ void listener(int client_socket, sockaddr_in server_addr){
     cout << "Listener stopped\n";
 }
 
+void Client::client_log_in(){
+    pair<pair<string, size_t>, vector<string>> username_password_users;
+    string line;
 
-int init_client(){
-    int client_socket = socket(AF_INET, SOCK_STREAM, 0);
-    return client_socket;
+    cout << "Are you registered(Y/n)? ";
+    
+    bool wrote_status = false;
+    cin >> line;
+    while(!wrote_status){
+        if(line == "Y"){
+            wrote_status = true;
+            username_password_users = autorization();
+        }else if(line == "n"){
+            wrote_status = true;
+            username_password_users = registration();
+        }else{
+            cout << "Please write Y or n\n";
+        }
+    }
+
+    username = username_password_users.first.first;
+    password = username_password_users.first.second;
+
+    username_list = username_password_users.second;
 }
 
 
-sockaddr_in get_server_addr(){
-    sockaddr_in server_addr;
+int Client::init_client(){
+    return socket(AF_INET, SOCK_STREAM, 0);
+}
+
+void Client::init_server_addr(){
+    server_addr;
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
 
@@ -46,12 +74,9 @@ sockaddr_in get_server_addr(){
         cout << "Что-то пошло не так на этапе инициализации IP-адреса сервера. \n";
         exit;
     }
-
-    return server_addr;
 }
 
-
-pair<int, string> send_message(string message, sockaddr_in server_addr){
+pair<int, string> Client::send_message(string message){
     int client_socket = init_client();
 
     if(connect(client_socket, (struct sockaddr*) &server_addr, sizeof(server_addr)) != 0){
@@ -76,30 +101,7 @@ pair<int, string> send_message(string message, sockaddr_in server_addr){
     return {200, buffer_str};
 }
 
-pair<pair<string, size_t>, vector<string>> client_cli_start(int client_socket, sockaddr_in server_addr){
-    pair<pair<string, size_t>, vector<string>> username_password;
-    string line;
-
-    cout << "Are you registered(Y/n)? ";
-    
-    bool wrote_status = false;
-    cin >> line;
-    while(!wrote_status){
-        if(line == "Y"){
-            wrote_status = true;
-            username_password = autorization(client_socket, server_addr);
-        }else if(line == "n"){
-            wrote_status = true;
-            username_password = registration(client_socket, server_addr);
-        }else{
-            cout << "Please write Y or n\n";
-        }
-    }
-
-    return username_password;
-}
-
-pair<pair<string, size_t>, vector<string>> autorization(int client_socket, sockaddr_in server_addr){
+pair<pair<string, size_t>, vector<string>> Client::autorization(){
     string username, password;
     hash<string> h;
     json autorization_req_ans, autorization_req;
@@ -113,7 +115,7 @@ pair<pair<string, size_t>, vector<string>> autorization(int client_socket, socka
 
         autorization_req = generate_hello(username, h(password));
 
-        pair<int, string> ans = send_message(to_string(autorization_req), server_addr);
+        pair<int, string> ans = send_message(to_string(autorization_req));
 
         if(ans.first == -400){
             cout << "Something went wrong on connection so try again\n";
@@ -127,7 +129,7 @@ pair<pair<string, size_t>, vector<string>> autorization(int client_socket, socka
             continue;
         }else if(autorization_req_ans["data"]["client_status"] == false){
             cout << "You havent registered yet. Instead of autorization try registration\n";
-            returnable_val = registration(client_socket, server_addr);
+            returnable_val = registration();
         }else if(autorization_req_ans["data"]["password_status"] == false){
             cout << "Password you wrote is incorrect. Try again.\n";
             continue;
@@ -141,7 +143,7 @@ pair<pair<string, size_t>, vector<string>> autorization(int client_socket, socka
     }
 }
 
-pair<pair<string, size_t>, vector<string>> registration(int client_socket, sockaddr_in server_addr){
+pair<pair<string, size_t>, vector<string>> Client::registration(){
     string username, password;
     json registration_req, registration_req_ans;
     hash<string> h;
@@ -156,7 +158,7 @@ pair<pair<string, size_t>, vector<string>> registration(int client_socket, socka
 
         registration_req = generate_registration(username, h(password));
 
-        pair<int, string> ans = send_message(to_string(registration_req), server_addr);
+        pair<int, string> ans = send_message(to_string(registration_req));
 
         if(ans.first == -400){
             cout << "Something went wrong on connection\nTry again\n";
@@ -173,7 +175,7 @@ pair<pair<string, size_t>, vector<string>> registration(int client_socket, socka
             continue;
         }else{
             cout << "Successful registration\nNow lets make autorization\n";
-            returnable_val = autorization(client_socket, server_addr);
+            returnable_val = autorization();
             return returnable_val;
         }
     }

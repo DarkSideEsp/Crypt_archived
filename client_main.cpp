@@ -12,25 +12,19 @@
 using namespace std;
 
 
-bool listen_run = true;
+bool listen_run;
 const int timer = 1;
 const char* server_ip = "127.0.0.1";
 const int port = 1234;
 
 
 int main(){
-    int client_socket = init_client();
-    sockaddr_in server_addr = get_server_addr();
+    Client client(server_ip, port, timer);
 
-    pair<pair<string, size_t>, vector<string>> temp = client_cli_start(client_socket, server_addr);
+    client.client_log_in();
 
-
-    /*
-    Hello message
-    */
-
-
-    thread listener_th(listener, client_socket, server_addr);
+    listen_run = true;
+    thread listener_th(&Client::listener, &client, ref(listen_run));
     listener_th.detach();
 
 
