@@ -51,20 +51,29 @@ sockaddr_in get_server_addr(){
 }
 
 
-pair<int, string> send_message(string message, int client_socket, sockaddr_in server_addr){
+pair<int, string> send_message(string message, sockaddr_in server_addr){
+    int client_socket = init_client();
+
     if(connect(client_socket, (struct sockaddr*) &server_addr, sizeof(server_addr)) != 0){
         cout << "Something went in connection :( \t" << strerror(errno) << "\n";
         return {-400, strerror(errno)};
     }
 
     send(client_socket, message.c_str(), message.size(), 0);
-    
+
+    string buffer_str = "";
     char buffer[1024];
-    memset(buffer, 0, sizeof(buffer));
+    int got_bytes = 2;
+    while(got_bytes > 0){
+        memset(buffer, 0, sizeof(buffer));
+        got_bytes = recv(client_socket, buffer, sizeof(buffer), 0);
 
-    recv(client_socket, buffer, sizeof(buffer), 0);
+        buffer_str += buffer;
+    }
 
-    return {200, (string) buffer};
+    close(client_socket);
+
+    return {200, buffer_str};
 }
 
 pair<pair<string, size_t>, vector<string>> client_cli_start(int client_socket, sockaddr_in server_addr){
@@ -104,10 +113,10 @@ pair<pair<string, size_t>, vector<string>> autorization(int client_socket, socka
 
         autorization_req = generate_hello(username, h(password));
 
-        pair<int, string> ans = send_message(to_string(autorization_req), client_socket, server_addr);
+        pair<int, string> ans = send_message(to_string(autorization_req), server_addr);
 
         if(ans.first == -400){
-            cout << "Something went wrong on connection\nTry again\n";
+            cout << "Something went wrong on connection so try again\n";
             continue;
         }else if(ans.first == 200){
             autorization_req_ans = json::parse(ans.second);
@@ -138,7 +147,7 @@ pair<pair<string, size_t>, vector<string>> registration(int client_socket, socka
     hash<string> h;
     pair<pair<string, size_t>, vector<string>> returnable_val;
 
-    cout << "Welcome to registration. It is a simple messages transfer. Any user is identified using unique username ans password. Now lets make you username\n";
+    cout << "Welcome to registration. It is a simple messages transfer. Any user is identified using unique username and password. Now lets make you username\n";
     while(true){
         cout << "Enter prefered username: ";
         cin >> username;
@@ -147,7 +156,7 @@ pair<pair<string, size_t>, vector<string>> registration(int client_socket, socka
 
         registration_req = generate_registration(username, h(password));
 
-        pair<int, string> ans = send_message(to_string(registration_req), client_socket, server_addr);
+        pair<int, string> ans = send_message(to_string(registration_req), server_addr);
 
         if(ans.first == -400){
             cout << "Something went wrong on connection\nTry again\n";

@@ -19,7 +19,7 @@ int init_client();
 
 sockaddr_in get_server_addr();
 
-pair<int, string> send_message(string message, int client_socket, sockaddr_in server_addr);
+pair<int, string> send_message(string message, sockaddr_in server_addr);
 
 pair<pair<string, size_t>, vector<string>> client_cli_start(int client_socket, sockaddr_in server_addr);
 

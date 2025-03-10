@@ -6,13 +6,17 @@
 #include <iostream>
 #include <cstring>
 #include <thread>
+#include <mutex>
 
 #include "server.hpp"
+#include "../json_lib/json.hpp"
+#include "../messages_gen/generators.hpp"
 
 
 using namespace std;
+using json = nlohmann::json;
 
-
+mutex mtx;
 
 pair<int, sockaddr_in> init_server(){
     pair<int, sockaddr_in> arguments;
@@ -40,22 +44,6 @@ void start_server(int server_socket, sockaddr_in server_addr){
 }
 
 
-void catch_client(int client_socket){
-    char buffer[1024];
-    memset(buffer, 0, sizeof(buffer));
-
-    int bytes = recv(client_socket, buffer, sizeof(buffer), 0);
-    if(bytes == -1){
-        cout << "Some Error in getting data: " << errno << "\n";
-    }
-    send(client_socket, buffer, bytes, 0);
-
-    cout << buffer << "\n";
-
-    close(client_socket);
-}
-
-
 void listener(int server_socket, sockaddr_in server_addr){
     cout << "Ready to clients\n";
     while(listener_run){
@@ -68,4 +56,73 @@ void listener(int server_socket, sockaddr_in server_addr){
         thread(catch_client, client_socket).detach();
     }
     cout << "Listener stopped\n";
+}
+
+
+void catch_client(int client_socket){
+    char buffer[1024];
+    memset(buffer, 0, sizeof(buffer));
+
+    int bytes = recv(client_socket, buffer, sizeof(buffer), 0);
+    if(bytes == -1){
+        cout << "Some Error in getting data: " << errno << "\n";
+    }
+
+    
+    json request = json::parse(buffer);
+    json response;
+    if(request["type"] == "hello"){
+        response = hello_processing(request);
+    }else if(request["type"] == "registration"){
+        response = registration_processing(request);
+    }
+
+    send(client_socket, to_string(response).c_str(), to_string(response).size(), 0);
+
+    close(client_socket);
+}
+
+
+json hello_processing(json request){
+    bool client_status = false;
+    bool password_status = false;
+
+    mtx.lock();
+    for(auto &user : users){
+        if(user.first == request["data"]["username"]){
+            client_status = true;
+            if(user.second == request["data"]["password"])
+                password_status = true;
+            break;
+        }
+    }
+    mtx.unlock();
+
+    if(client_status && password_status)
+        return generate_hello_ans(client_status, password_status, username_list);
+    else
+        return generate_hello_ans(client_status, password_status, {});
+}
+
+json registration_processing(json request){
+    bool status = true;
+
+    mtx.lock();
+    for(auto &user : username_list){
+        if(user == request["data"]["username"]){
+            status = false;
+            break;
+        }
+    }
+    mtx.unlock();
+
+    if(!status){
+        return generate_registration_ans(status);
+    }else{
+        mtx.lock();
+        users.push_back({request["data"]["username"], request["data"]["password"]});
+        username_list.push_back(request["data"]["username"]);
+        mtx.unlock();
+        return generate_registration_ans(status);
+    }
 }

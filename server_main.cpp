@@ -5,6 +5,8 @@
 #include <arpa/inet.h>
 #include <thread>
 #include <string>
+#include <vector>
+#include <map>
 
 #include "sources/server/server.hpp"
 
@@ -14,6 +16,9 @@ using namespace std;
 
 bool listener_run;
 const int port = 1234;
+
+vector<pair<string, size_t>> users;
+vector<string> username_list;
 
 
 int main(){
