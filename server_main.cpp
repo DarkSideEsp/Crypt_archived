@@ -17,19 +17,14 @@ using namespace std;
 bool listener_run;
 const int port = 1234;
 
-vector<pair<string, size_t>> users;
-vector<string> username_list;
-
 
 int main(){
-    pair<int, sockaddr_in> temp = init_server();
-    int server_socket = temp.first;
-    sockaddr_in server_addr = temp.second;
+    Server server(port);
 
-    start_server(server_socket, server_addr);
+    server.start_server();
     
     listener_run = true;
-    thread listener_th(listener, server_socket, server_addr);
+    thread listener_th(&Server::listener, &server, ref(listener_run));
     listener_th.detach();
 
 
@@ -40,7 +35,7 @@ int main(){
 
         if(line == "stop server"){
             listener_run = false;
-            close(server_socket);
+            server.close_server_socket();
             cout << "Server stopped\n";
         }
     }
