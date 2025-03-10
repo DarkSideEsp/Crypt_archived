@@ -28,12 +28,13 @@ int main(){
     mutex mtx;
 
     mtx.lock();
-    cout << "Client ready to work\n";
+    cout << "Client ready to work. To send message use:\n\tsend text to destination_username\n";
     mtx.unlock();
 
     string line = "";
     while(line != "exit"){
         getline(cin, line);
+        client.command(line);
     }
 
 

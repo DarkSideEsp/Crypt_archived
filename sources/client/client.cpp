@@ -69,6 +69,21 @@ void Client::client_log_in(){
     username_list = username_password_users.second;
 }
 
+void Client::command(string line){
+    vector<string> splitted_line;
+    stringstream stream(line);
+
+    string i = "";
+    while(getline(stream, i, ' ')) splitted_line.push_back(i);
+
+    if(splitted_line[0] == "send"){
+        if(splitted_line[1] == "text"){
+            send_text_message(splitted_line[3]);
+        }
+    }
+}
+
+
 
 int Client::init_client(){
     return socket(AF_INET, SOCK_STREAM, 0);
@@ -212,6 +227,60 @@ pair<pair<string, size_t>, vector<string>> Client::registration(){
             mtx.unlock();
             returnable_val = autorization();
             return returnable_val;
+        }
+    }
+}
+
+void Client::send_text_message(string destination){
+    string message = "";
+    json send_req, send_ans;
+    pair<int, string> send_response;
+
+    while(true){
+        mtx.lock();
+        cout << "Enter your message: ";
+        cin >> message;
+        mtx.unlock();
+
+        send_req = generate_send(username, password, destination, "text", message);
+
+        send_response = send_message(to_string(send_req));
+
+        if(send_response.first == -400){
+            mtx.lock();
+            cout << "Something went wrong on connection\nTry again\n";
+            mtx.unlock();
+            continue;
+        }else if(send_response.first == 200){
+            send_ans = json::parse(send_response.second);
+        }
+
+        if(send_ans["type"] != "send_ans"){
+            mtx.lock();
+            cout << "Caught unexpected response\nTry again\n";
+            mtx.unlock();
+            continue;
+        }else if(!send_ans["data"]["autorize_flag"]){
+            mtx.lock();
+            cout << "Wrong password or username. Log in again.\n";
+            mtx.unlock();
+
+            client_log_in();
+            continue;
+        }else if(!send_ans["data"]["user_exist"]){
+            mtx.lock();
+            cout << "Wrong destination username\nTry send command again\n";
+            mtx.unlock();
+            return;
+        }else if(!send_ans["data"]["message_sent"]){
+            mtx.lock();
+            cout << "Mistake in sending message\nTry send command again\n";
+            mtx.unlock();
+            return;
+        }else{
+            mtx.lock();
+            cout << "Shipped :)\n";
+            break;
         }
     }
 }

@@ -14,6 +14,7 @@ public:
     Client(const char* server_ip, int port, int timer);
     void listener(bool& listen_run);
     void client_log_in();
+    void command(string line);
 
 protected:
     int init_client();
@@ -21,6 +22,7 @@ protected:
     pair<int, string> send_message(string message);
     pair<pair<string, size_t>, vector<string>> autorization();
     pair<pair<string, size_t>, vector<string>> registration();
+    void send_text_message(string destination);
 
 private:
     int client_socket;
