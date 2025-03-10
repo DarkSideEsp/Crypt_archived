@@ -180,11 +180,11 @@ json Server::send_processing(json request){
     mtx.unlock();
 
     if(autorize_flag && user_exist){
-        mtx.lock();
         string dest_name = request["data"]["dest_username"];
         string username = request["data"]["username"];
         string message = request["data"]["message"];
 
+        mtx.lock();
         user_messages[dest_name].insert({username, message});
         mtx.unlock();
         message_sent = true;

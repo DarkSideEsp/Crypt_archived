@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <iostream>
 #include <cstring>
+#include <map>
 
 #include "client.hpp"
 #include "../messages_gen/generators.hpp"
@@ -24,13 +25,7 @@ void Client::listener(bool& listen_run){
     cout << "\nListener started\n";
     mtx.unlock();
     while(listen_run){
-        /*
-        Gen Listen message
-        Send it
-        Get the ans
-        Write if it exist
-        */
-
+        get_messages();
         sleep(timer);
     }
     mtx.lock();
@@ -71,7 +66,7 @@ void Client::client_log_in(){
 
 void Client::command(string line){
     if(line.size() == 0) return;
-    
+
     vector<string> splitted_line;
     stringstream stream(line);
 
@@ -292,4 +287,30 @@ void Client::send_text_message(string destination){
             break;
         }
     }
+}
+
+void Client::get_messages(){
+    json response, request;
+
+    request = generate_message_req(username, password);
+
+    pair<int, string> ans = send_message(to_string(request));
+
+    if(ans.first == 200) response = json::parse(ans.second);
+    else return;
+
+    if(response["type"] != "message_req_ans") return;
+
+    if(!response["data"]["autorize_flag"]) return;
+
+    if(response["data"]["count_new"] == 0) return;
+
+    map<string, string> messages;
+    response["data"]["messages"].get_to(messages);
+
+    mtx.lock();
+    for(auto& [from_username, input_message] : messages){
+        cout << "New message from: " << from_username << ". With text:\n" << input_message << "\n";
+    }
+    mtx.unlock();
 }

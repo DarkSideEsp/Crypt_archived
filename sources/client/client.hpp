@@ -23,6 +23,7 @@ protected:
     pair<pair<string, size_t>, vector<string>> autorization();
     pair<pair<string, size_t>, vector<string>> registration();
     void send_text_message(string destination);
+    void get_messages();
 
 private:
     int client_socket;
