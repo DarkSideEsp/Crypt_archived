@@ -45,7 +45,7 @@ json generate_registration_ans(bool status){
     json registration_ans;
 
     registration_ans["type"] = "registration_ans";
-    registration_ans["data"]["status"] = status;
+    registration_ans["data"]["username_status"] = status;
 
     return registration_ans;
 }

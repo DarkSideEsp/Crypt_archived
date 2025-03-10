@@ -213,14 +213,14 @@ pair<pair<string, size_t>, vector<string>> Client::registration(){
             cout << "Caught unexpected response\nTry again\n";
             mtx.unlock();
             continue;
-        }else if(registration_req["data"]["status"] == false){
+        }else if(registration_req_ans["data"]["username_status"] == false){
             mtx.lock();
             cout << "This username already used, try other.\n";
             mtx.unlock();
             continue;
         }else{
             mtx.lock();
-            cout << "Successful registration\nNow lets make autorization\n";
+            cout << "Successful registration\nNow lets make log in\n";
             mtx.unlock();
             returnable_val = autorization();
             return returnable_val;
@@ -243,7 +243,7 @@ void Client::send_text_message(string destination){
     while(true){
         mtx.lock();
         cout << "Enter your message: ";
-        cin >> message;
+        getline(cin, message);
         mtx.unlock();
 
         send_req = generate_send(username, password, destination, "text", message);
@@ -284,7 +284,8 @@ void Client::send_text_message(string destination){
         }else{
             mtx.lock();
             cout << "Shipped :)\n";
-            break;
+            mtx.unlock();
+            return;
         }
     }
 }

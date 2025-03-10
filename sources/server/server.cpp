@@ -142,11 +142,14 @@ json Server::hello_processing(json request){
 }
 
 json Server::registration_processing(json request){
+    string username = request["data"]["username"];
+    size_t password = request["data"]["password"];
+
     bool status = true;
 
     mtx.lock();
     for(auto &user : username_list){
-        if(user == request["data"]["username"]){
+        if(user == username){
             status = false;
             break;
         }
@@ -157,9 +160,9 @@ json Server::registration_processing(json request){
         return generate_registration_ans(status);
     }else{
         mtx.lock();
-        users.push_back({request["data"]["username"], request["data"]["password"]});
-        username_list.push_back(request["data"]["username"]);
-        user_messages[request["data"]["username"]] = {};
+        users.push_back({username, password});
+        username_list.push_back(username);
+        user_messages[username] = {};
         mtx.unlock();
         return generate_registration_ans(status);
     }
