@@ -1,0 +1,88 @@
+{
+    "pattern": {
+        "type": "Hello/Register/Send/Any messages?",
+        "data": {
+            "...": "..."
+        }
+    },
+
+
+    "hello": {
+        "type": "hello",
+        "data": {
+            "username": "name",     // если зарегестрирован то с каким именем
+            "password": 12345     // и какой от него пароль(хеш пароля)
+        }
+    },
+
+    "hello_ans": {
+        "type": "hello_ans",
+        "data": {
+            "client_status": true,      // статус зарегистрирован пользователь или нет
+            "password_status": true,        // статус правильности пароля
+            "users_list": [ 
+                "name",
+                "name1",        /// список зарегистрированных пользователей(им можно отправлять сообщения)
+                "name2"     /// возвращается с именами только зарегистрированному пользователю с правильно указанным паролем
+            ]               
+        }
+    },
+
+
+    "registration": {
+        "type": "registration",
+        "data": {
+            "intend_name": "user_name_id",      /// имя которое хочет использовать пользователь для авторизации и общения в будущем
+            "password": "password_hash"
+        }
+    },
+
+    "registration_ans": {
+        "type": "registration_ans",
+        "data": {
+            "status": true      /// успешно выделено имя пользователя или нет
+        }
+    },
+
+
+    "get_messages": {
+        "type": "messages_req",
+        "data": {
+            "username": "user_name",
+            "password": "password_hash"
+        }
+    },
+
+    "get_messages_ans": {
+        "type": "messages_req_ans",
+        "data": {
+            "autorize_flag": true,      /// флаг авторизации
+            "count_new": 2,     /// сколько новых сообщений существует
+            "messages": {
+                "name": "name_message",     /// имя пользователя отправившего сообщение и сообщение соответственно
+                "name1": "name1_message"
+            }
+        }
+    },
+
+
+    "send": {
+        "type": "send",
+        "data": {
+            "username": "user_name",
+            "password": "password_hash",
+            "dest_username": "destination_username",       /// имя пользователя которому отправляется сообщение
+            "type": "text",     /// тип сообщения(текст, файл?)
+            "message": "message"        /// само сообщение
+        }
+    },
+
+    "send_ans": {
+        "type": "send_ans",
+        "data": {
+            "autorize_flag": true,      /// флаг авторизации
+            "user_exist": true,          /// статус существования пользователя
+            "message_sent": true        /// статус отправки сообщения
+        }
+    }
+}
