@@ -78,7 +78,7 @@ json generate_send(string username, size_t password_hash, string destination_use
     send["data"]["username"] = username;
     send["data"]["password"] = password_hash;
     send["data"]["dest_username"] = destination_username;
-    send["data"]["type"] = type;
+    send["data"]["message_type"] = type;
     send["data"]["message"] = message;
 
     return send;

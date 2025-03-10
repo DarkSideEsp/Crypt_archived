@@ -70,6 +70,8 @@ void Client::client_log_in(){
 }
 
 void Client::command(string line){
+    if(line.size() == 0) return;
+    
     vector<string> splitted_line;
     stringstream stream(line);
 
@@ -235,6 +237,13 @@ void Client::send_text_message(string destination){
     string message = "";
     json send_req, send_ans;
     pair<int, string> send_response;
+
+    if(username == destination){
+        mtx.lock();
+        cout << "Sorry you cant send message for yourself ;)\n";
+        mtx.unlock();
+        return;
+    }
 
     while(true){
         mtx.lock();

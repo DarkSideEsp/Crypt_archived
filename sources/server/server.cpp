@@ -97,13 +97,15 @@ void Server::catch_client(int client_socket){
         mtx.unlock();
     }
 
-    
     json request = json::parse(buffer);
+    
     json response;
     if(request["type"] == "hello"){
         response = hello_processing(request);
     }else if(request["type"] == "registration"){
         response = registration_processing(request);
+    }else if(request["type"] == "send"){
+        response = send_processing(request);
     }
 
     send(client_socket, to_string(response).c_str(), to_string(response).size(), 0);
@@ -154,7 +156,43 @@ json Server::registration_processing(json request){
         mtx.lock();
         users.push_back({request["data"]["username"], request["data"]["password"]});
         username_list.push_back(request["data"]["username"]);
+        user_messages[request["data"]["username"]] = {};
         mtx.unlock();
         return generate_registration_ans(status);
     }
 }
+
+json Server::send_processing(json request){
+    bool autorize_flag = false;
+    bool user_exist = false;
+    bool message_sent = false;
+
+    mtx.lock();
+    for(auto &user : users){
+        if(user.first == request["data"]["username"] && user.second == request["data"]["password"]){
+            autorize_flag = true;
+        }
+        if(user.first == request["data"]["dest_username"]){
+            user_exist = true;
+        }
+        if(user_exist && autorize_flag) break;
+    }
+    mtx.unlock();
+
+    if(autorize_flag && user_exist){
+        mtx.lock();
+        string dest_name = request["data"]["dest_username"];
+        string username = request["data"]["username"];
+        string message = request["data"]["message"];
+
+        user_messages[dest_name].insert({username, message});
+        mtx.unlock();
+        message_sent = true;
+
+        return generate_send_ans(autorize_flag, user_exist, message_sent);
+    }else{
+        return generate_send_ans(autorize_flag, autorize_flag && user_exist, message_sent);
+    }
+}
+
+

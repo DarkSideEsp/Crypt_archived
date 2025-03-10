@@ -6,6 +6,7 @@
 #include <mutex>
 #include <thread>
 #include <arpa/inet.h>
+#include <map>
 
 #include "../json_lib/json.hpp"
 
@@ -26,6 +27,7 @@ protected:
     void catch_client(int client_socket);
     json hello_processing(json request);
     json registration_processing(json request);
+    json send_processing(json request);
 
 private:
     vector<pair<string, size_t>> users;
@@ -36,6 +38,8 @@ private:
     int server_socket;
     sockaddr_in server_addr;
 
-    int client_visited_count = 0;
-    int client_count = 0;
+    unsigned int client_visited_count = 0;
+    unsigned int client_count = 0;
+
+    map<string, map<string, string>> user_messages;
 };
