@@ -4,6 +4,7 @@
 #include <string>
 #include <arpa/inet.h>
 #include <vector>
+#include <mutex>
 
 using namespace std;
 
@@ -30,4 +31,5 @@ private:
     vector<string> username_list;
     const char* server_ip;
     const size_t port;
+    mutex mtx;
 };

@@ -26,13 +26,13 @@ int main(){
 
         if(line == "commands"){
             mtx.lock();
-            cout << " init server \n start server \n stop server \n get used usernames \n commands \n exit \n delete server \n ";
+            cout << " init server \n start server \n stop server \n get used usernames \n commands \n exit \n delete server \n";
             mtx.unlock();
             
         }else if(line == "stop server"){
             if(server == nullptr){
                 mtx.lock();
-                cout << "You havent initialize server yet. Try: init server\n";
+                cout << "You havent initialized server yet. Try: init server\n";
                 mtx.unlock();
                 continue;
             }

@@ -1,10 +1,8 @@
 #include <iostream>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <unistd.h>
-#include <arpa/inet.h>
 #include <thread>
 #include <string>
+#include <mutex>
 
 #include "sources/client/client.hpp"
 
@@ -24,13 +22,19 @@ int main(){
     client.client_log_in();
 
     listen_run = true;
-    thread listener_th(&Client::listener, &client, ref(listen_run));
-    listener_th.detach();
+    thread(&Client::listener, &client, ref(listen_run)).detach();
 
 
-    /*
-    Something
-    */
+    mutex mtx;
+
+    mtx.lock();
+    cout << "Client ready to work\n";
+    mtx.unlock();
+
+    string line = "";
+    while(line != "exit"){
+        getline(cin, line);
+    }
 
 
     listen_run = false;
